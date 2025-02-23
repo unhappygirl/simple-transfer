@@ -1,0 +1,89 @@
+#! /usr/bin/env ruby  
+
+
+require_relative "../lib/transfer.rb"
+require_relative "../lib/repl.rb"
+
+include SimpleTransfer
+
+$valid_server_commands = ["--server", "-s", "server", "--serve"]
+$valid_client_commands = ["--client", "-c", "client", "--cli"]
+
+def numeric?(str)
+    true if Float(str) rescue false
+end
+
+def is_valid_command(command)
+  if $valid_server_commands.include?(command)
+    return "server"
+  elsif $valid_client_commands.include?(command)
+    return "client"
+  end
+  return nil
+end
+
+def init_server(port)
+  myserver = Server.new(port)
+  myserver.start()
+end
+
+def init_client(server_addr, server_port)
+  myshell = STShell.new(server_addr, server_port)
+  myshell.init_loop()
+end
+
+
+def check_mode(mode)
+    if mode.nil?
+        puts "Please provide a mode, friend; >:3\
+            --server <port> or --client <server_addr> <server_port>"
+        return false
+    elsif not is_valid_command(mode)
+        puts "#{mode} is not a valid mode, friend; >:3\
+            --server <port> or --client <server_addr> <server_port>"
+        return false
+    end
+    return true
+end
+
+def check_port(port)
+    if port.nil?
+        puts "Please provide a port number, friend :3"
+        return false
+    elsif not numeric?(port)
+        puts "Port number must be an integer, friend :3"
+        return false
+    end
+    return true
+end
+
+def check_addr(mode, addr)
+    if addr.nil? and is_valid_command(mode) == "client"
+        puts "Please provide a server address, friend :3"
+        return false
+    end
+    return true
+end
+
+def use_args(args, mode)
+
+
+end
+
+def main()
+  mode, port, addr = ARGV
+  if not check_mode(mode) or not check_port(port)
+    return
+  end
+  if not check_addr(mode, addr)
+    return
+  end
+  if is_valid_command(mode) == "server"
+    init_server(port)
+  else
+    init_client(addr, port)
+  end
+  puts "Goodbye friend, hope you enjoyed Simple-Transfer :3" #!
+end
+
+main() #!
