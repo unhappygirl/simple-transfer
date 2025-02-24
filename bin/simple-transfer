@@ -1,6 +1,5 @@
 #! /usr/bin/env ruby  
 
-
 require_relative "../lib/transfer.rb"
 require_relative "../lib/repl.rb"
 
@@ -63,11 +62,6 @@ def check_addr(mode, addr)
         return false
     end
     return true
-end
-
-def use_args(args, mode)
-
-
 end
 
 def main()

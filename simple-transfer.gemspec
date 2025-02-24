@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
     s.email     = ['atifaydinturanli@gmail.com']
     s.homepage  = 'http://rubygems.org/gems/pagekey'
     s.license   = 'MIT'
+    s.homepage = "https://github.com/unhappygirl/simple-transfer"
     s.files     = Dir.glob("{lib,bin}/**/*")
     s.require_path = 'lib'
     s.bindir = 'bin'
