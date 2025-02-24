@@ -16,7 +16,7 @@ or a client:
 
 ```simple-transfer --client server_port server_addr```
 
-Done. Yes, it is that simple!
+Done. Yes, it is that **simple**!
 
 
 
