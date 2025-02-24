@@ -1,5 +1,7 @@
 *.gem
+*.sh
 *.rbc
+makefile
 /.config
 /coverage/
 /InstalledFiles
