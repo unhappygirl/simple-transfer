@@ -86,4 +86,4 @@ def main()
   puts "Goodbye friend, hope you enjoyed Simple-Transfer :3" #!
 end
 
-main() #!
+main() # real!

@@ -1,10 +1,22 @@
 
 require_relative "transfer.rb"
 
+
+$logo = <<EOF
+
+.---.             .         .                             
+\___  . ,-,-. ,-. |  ,-.    |- ,-. ,-. ,-. ,-. ," ,-. ,-. 
+    \ | | | | | | |  |-' -- |  |   ,-| | | `-. |- |-' |   
+`---' ' ' ' ' |-' `' `-'    `' '   `-^ ' ' `-' |  `-' '   
+              |                                '          
+              '                                                                     
+EOF
+    
+
 class STShell
     def initialize(server_addr, port)
         @port = port
-        @client = SimpleTransfer::Sender.new(server_addr, port)
+        @client = SimpleTransfer::Sender.new(server_addr, port, logging=true)
     end
 
     def self.list_files(path)
@@ -23,9 +35,17 @@ class STShell
         if p1 == "clear"
             system "clear"
         elsif p1 == "send_file"
-            @client.send_file(p2)
+            if File.directory?(p2)
+                puts "You can't send a directory as a file, friend!"
+            else
+                @client.send_file(p2)
+            end
         elsif p1 == "send_directory"
-            @client.send_directory(p2)
+            if not File.directory?(p2)
+                puts "You can't send a file as a directory, friend!"
+            else
+                @client.send_directory(p2)
+            end
         elsif p1 == "cd"
             Dir.chdir(p2)
         elsif p1 == "ls"
@@ -60,6 +80,7 @@ class STShell
     end
 
     def init_loop()
+        puts $logo
         puts "STShell initialized on port #{@port}!"
         puts "Hello friend, thank you for using simple transfer!"
         puts "Are you ready to drown in simplicity?"

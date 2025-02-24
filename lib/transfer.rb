@@ -95,7 +95,7 @@ module SimpleTransfer
     def copyto_local(data)
       fdata, filename = data
       dirname = File.dirname(filename)
-      if not File.exist?(dirname)
+      if not File.exist?('.' + dirname)
         FileUtils.mkdir_p(dirname)
       end
       File.open(filename, "wb") do |f|
