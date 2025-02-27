@@ -13,7 +13,8 @@ module SimpleTransfer
   end
 
   def log_progress(downloaded, length, filename)
-    Kernel.print "\r[TRANSFER!] Downloading #{filename}... #{downloaded}/#{length} bytes"
+    Kernel.print "\r[TRANSFER!] Downloading #{filename}... #{downloaded}/#{length} bytes" \
+     "\n #{progress_bar(downloaded, length)}"
   end
 
   class Server < TCPServer
@@ -28,8 +29,8 @@ module SimpleTransfer
       return self.addr[1]
     end
 
-    def recv_chunk(size=@@recv_size)
-      return @conn.recv(size)
+    def recv_chunk()
+      return @conn.recv(@@recv_size)
     end
 
     def init_transfer()
@@ -64,19 +65,11 @@ module SimpleTransfer
         log_transfer("Failed to receive initiation data", level = "WARNING") if @logging
         return false, nil
       elsif init_data == 0
-        log_transfer("Connection closed by the client", level = "WARNING") if @logging
+        log_transfer("Connection closed by client", level = "WARNING") if @logging
         return false, 0
         return false, init_data
       end
       return init_data
-    end
-
-    def recv_part(data, data_length) 
-      # no need to end sync, just check if exactly the file size is read at total
-      remaining = data_length - data.length
-      part = remaining < @@recv_size ? recv_chunk(remaining) : recv_chunk()
-      return part
-      #
     end
 
     def recv_file()
@@ -87,14 +80,14 @@ module SimpleTransfer
       data_length, filename = init
       data = ""
       while data.length < data_length
-        data += recv_part(data, data_length)
+        data += recv_chunk()
         sleep(0.01)
         log_progress(data.length, data_length, filename) if @logging
       end
       Kernel.print "\n"
       if data.length != data_length
         log_transfer(
-          "more or less data received for #{filename}", level = "WARNING"
+          "partial data received for #{filename}", level = "WARNING"
         ) if @logging
       end
       return data, filename
@@ -103,7 +96,7 @@ module SimpleTransfer
     def copyto_local(data)
       fdata, filename = data
       dirname = File.dirname(filename)
-      if not File.exist?('.' + dirname)
+      if not File.exist?(dirname)
         FileUtils.mkdir_p(dirname)
       end
       File.open(filename, "wb") do |f|
@@ -193,6 +186,8 @@ module SimpleTransfer
 
     def send_directory(directory)
       scan_directory(directory).each do |f|
+        #sleep because there is no sync for end of transfer
+        sleep 0.5 
         if File.directory?(f)
           send_directory(f)
         else send_file(f)         end
