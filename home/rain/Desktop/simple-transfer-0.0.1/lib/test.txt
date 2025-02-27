@@ -1,7 +1,0 @@
-A syntax form. 
-In Ruby we apply the string format syntax (the "%" operator) to ease this creation of formatted string data. 
-After the "%" we specify arguments.
-
-A first example. 
-We use the percentage sign ("%") to specify a format code within a string. 
-And we also apply the "%" sign after the string, to indicate the arguments.
